@@ -58,11 +58,22 @@ public class SubscriptionController {
   }
 
   @DeleteMapping("/users/{userId}/subscriptions/{subId}")
-  public ResponseEntity<String> removeSubscription(@PathVariable Long subId) {
+  public ResponseEntity<String> removeSubscription(@PathVariable Long subId, @PathVariable Long userId) {
 
-    Optional<Subscription> subscription = subscriptionService.getSubscriptionById(subId);
-    if (subscription.isEmpty()) {
+    User user = userService.getUser(userId);
+    if (user == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+    }
+
+    Optional<Subscription> subscriptionOptional = subscriptionService.getSubscriptionById(subId);
+    if (subscriptionOptional.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subscription not found.");
+    }
+
+    Subscription subscription = subscriptionOptional.get();
+
+    if (!subscription.getUser().equals(user)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Subscription does not belong to this user.");
     }
 
     subscriptionService.removeSubscription(subId);
