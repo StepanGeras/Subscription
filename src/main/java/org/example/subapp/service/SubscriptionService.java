@@ -1,6 +1,5 @@
 package org.example.subapp.service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.example.subapp.entity.Subscription;
@@ -8,11 +7,7 @@ import org.example.subapp.repo.SubscriptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.awt.print.Pageable;
-
-
 import java.util.List;
 
 @Service
@@ -26,9 +21,9 @@ public class SubscriptionService {
     this.subscriptionRepository = subscriptionRepository;
   }
 
-  public Subscription addSubscription(Subscription subscription) {
+  public void addSubscription(Subscription subscription) {
     logger.info("Adding subscription: {}", subscription.getServiceName());
-    return subscriptionRepository.save(subscription);
+    subscriptionRepository.save(subscription);
   }
 
   public List<Subscription> getUserSubscriptions(Long userId) {
